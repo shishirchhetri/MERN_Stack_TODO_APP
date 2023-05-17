@@ -1,0 +1,28 @@
+//add a new item
+POST http://localhost:8000/api/item
+Content-Type: application/json
+
+{
+    "item":"This is lklklk item"
+}
+
+
+###
+//lists all items
+POST http://localhost:8000/api/items
+Content-Type: application/json
+
+
+###
+//update the item with corresponding id
+PUT http://localhost:8000/api/item/64647de8bb30610761701e3a
+Content-Type: application/json
+
+{
+    "item": "This is the starting item"
+}
+
+###
+//delete the item with corresponding id
+DELETE  http://localhost:8000/api/item/646490804c4a6161fcbbde10
+Content-Type: application/json
