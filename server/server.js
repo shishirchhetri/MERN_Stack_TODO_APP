@@ -16,7 +16,10 @@ app.use(cors());
   
 mongoose.connect(MONGOURL)
 .then(()=> console.log("Connected to database successfully"))
-.catch(err=> console.log(err));
+.catch(err=> {
+    console.log("Could not connect to the database!!")
+    console.log(err)
+});
 
 app.use(todoRoute);
 
@@ -24,3 +27,4 @@ app.use(todoRoute);
 app.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
 })
+  
