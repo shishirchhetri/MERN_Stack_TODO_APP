@@ -8,9 +8,12 @@ function App() {
   const [itemText, SetItemText] = useState("");
   const [listItems, SetListItems] = useState([]);
 
+
   //for toastify notification
   const notifyErr = (msg) => toast.error(msg);
   const notifySuccess = (msg) => toast.success(msg);
+  
+  
 
   //adding new item to the TODO App
   const addItem = async (e) => {
@@ -19,7 +22,12 @@ function App() {
       const res = await axios.post("http://localhost:8000/api/item", {
         item: itemText,
       });
-      notifySuccess("Added to the list.");
+      //validation for empty list
+      if(itemText === ''){
+        notifyErr('please add some text first');
+        return;
+      }
+      notifySuccess("Successfully added to the list.");
       SetItemText("");
     } catch (err) {
       console.log(err);
@@ -38,8 +46,19 @@ function App() {
       }
     };
     getItemsList();
-  }, []);
+  }, [listItems]);
 
+  //delete item list in the app
+  const deleteItem = async (id)=>{
+    try{
+      const res = await axios.delete(`http://localhost:8000/api/item/${id}`);
+      notifySuccess("Deletion success!!");
+      const newListItem = listItems.filter(item=> item._id !== id);
+      SetListItems(newListItem);
+    }catch(err){
+      console.log(err);
+    }
+  }
   return (
     <>
       <ToastContainer />
@@ -58,10 +77,10 @@ function App() {
         </form>
         <div className="todo-listItems">
           {listItems.map((item) => {
-           return (<div className="todo-item" key={item.index}>
+           return (<div className="todo-item" key={item._id}>
               <p className="item-content">{item.item}</p>
               <button className="update-item">Update</button>
-              <button className="delete-item">Delete</button>
+              <button className="delete-item" onClick={()=> deleteItem(item._id)}>Delete</button>
             </div>);
           })}
         </div>
