@@ -8,7 +8,7 @@
   
 }
 .App-container {
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
   background-color: #f1f1f1;
@@ -34,6 +34,7 @@ input[type="text"] {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+  width: 100%;
 }
 
 button[type="submit"] {
@@ -55,14 +56,17 @@ button[type="submit"] {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-gap: 10px;
+  width: 90%;
 }
 
 .todo-item {
   display: flex;
   align-items: center;
   background-color: #fff;
-  padding: 10px;
+  padding: 5px 20px;
   border-radius: 4px;
+  background-color: rgb(218, 226, 234);
+
 }
 
 .item-content {
@@ -82,23 +86,23 @@ button[type="submit"] {
 
 .delete-item {
   background-color: #dc3545;
+  width:80px ;
 }
 
-
-/* .button[type=submit] {
-  height: 20px;
-  width: 20px;
-  padding: 0;
-  border: none;
-  position: relative;
-  overflow: hidden;
+.update-form{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
-
-.button .loader {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 10px;
-  height: 10px;
-} */
+.update-new-input{
+  width: 80%;
+  border-radius: 6px;
+  border: 1px solid #eee;
+  padding: 8px;
+  outline: none;
+}
+.update-new-btn{
+  background-color: darkorchid;
+  color: #fff;
+  cursor: pointer;
+}

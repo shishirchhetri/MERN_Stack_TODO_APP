@@ -1,5 +1,4 @@
 const router = require('express').Router();
-
 const todoModel = require('../models/todo');
 
 //addng new item
@@ -27,17 +26,15 @@ router.post('/api/items', async(req,res)=>{
 })
 
 //update items
-router.put('/api/item/:id', async (req, res) => {
-    try {
-      const updatedItem = await todoModel.findByIdAndUpdate(req.params.id, { item: req.body.item }, { new: true });
-      if (!updatedItem) {
-        return res.status(404).json({ error: 'Item not found' });
-      }
-      res.status(200).json({msg:'Item updated successfully'});
-    } catch (err) {
-      res.status(500).json({ error: 'Server error' });
-    }
-  });
+router.put('/api/item/:id', async (req, res)=>{
+  try{
+    //find the item by its id and update it
+    const updateItem = await todoItemsModel.findByIdAndUpdate(req.params.id, {$set: req.body});
+    res.status(200).json(updateItem);
+  }catch(err){
+    res.json(err);
+  }
+})
   
 
 

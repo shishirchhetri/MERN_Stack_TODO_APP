@@ -15,11 +15,11 @@ Content-Type: application/json
 
 ###
 //update the item with corresponding id
-PUT http://localhost:8000/api/item/64647de8bb30610761701e3a
+PUT http://localhost:8000/api/item/6465c70d41b7bea78b3b5e2f
 Content-Type: application/json
 
 {
-    "item": "This is the starting item"
+    "item": "call me tonight!"
 }
 
 ###

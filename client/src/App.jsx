@@ -3,13 +3,15 @@ import axios from "axios";
 import "./App.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Preloader from "./components/Preloader";
-import ButtonWithLoading from "./components/Loader";
+import Preloader from "./components/loading/Loading";
 
 function App() {
   const [itemText, SetItemText] = useState("");
   const [listItems, SetListItems] = useState([]);
   const [isLoading, SetIsLoading] = useState(false);
+  const [isDeleting, SetIsDeleting] = useState(false);
+  const [isUpdating, SetIsUpdating] = useState("");
+  const [updateItemText, setUpdateItemText] = useState("");
 
   //for toastify notification
   const notifyErr = (msg) => toast.error(msg);
@@ -55,14 +57,44 @@ function App() {
   //delete item list in the app
   const deleteItem = async (id) => {
     try {
-      const res = await axios.delete(`http://localhost:8000/api/item/${id}`);
-      notifySuccess("Deletion success!!");
-      const newListItem = listItems.filter((item) => item._id !== id);
-      SetListItems(newListItem);
+      SetIsDeleting(true);
+      const res = await axios
+        .delete(`http://localhost:8000/api/item/${id}`)
+        .then(() => {
+          SetIsDeleting(true);
+          notifySuccess("Deletion success!!");
+          const newListItem = listItems.filter((item) => item._id !== id);
+          SetListItems(newListItem);
+        });
+
+      SetIsDeleting(false);
     } catch (err) {
       console.log(err);
     }
   };
+
+  //updating item
+   const updateItem = async (e) => {
+    e.preventDefault()
+    try{
+      const res = await axios.put(`http://localhost:8000/api/item/${isUpdating}`, {item: updateItemText})
+      console.log(res.data)
+      const updatedItemIndex = listItems.findIndex(item => item._id === isUpdating);
+      const updatedItem = listItems[updatedItemIndex].item = updateItemText;
+      setUpdateItemText('');
+      SetIsUpdating('');
+      notifySuccess("Updated successfully!")
+    }catch(err){
+      console.log(err);
+    }
+  }
+  //before updating item we need to show input field where we will create our updated item
+  const renderUpdateForm = () => (
+    <form className="update-form" onSubmit={(e)=>{updateItem(e)}} >
+      <input className="update-new-input" type="text" placeholder="Enter updated text" onChange={e=>{setUpdateItemText(e.target.value)}} value={updateItemText} />
+      <button className="update-new-btn" type="submit">Update</button>
+    </form>
+  )
   return (
     <>
       <ToastContainer />
@@ -78,23 +110,40 @@ function App() {
               }}
               value={itemText}
             />
-            <button type="submit" >{
-          isLoading ? (<Preloader className='loader'/>) : ("Add")}</button>
-          
+            <button type="submit">
+              {isLoading ? <Preloader className="loader" /> : "Add"}
+            </button>
           </form>
           <div className="todo-listItems">
             <h2 className="list-title">Todo lists</h2>
             {listItems.map((item) => {
               return (
                 <div className="todo-item" key={item._id}>
-                  <p className="item-content">{item.item}</p>
-                  <button className="update-item">Update</button>
-                  <button
-                    className="delete-item"
-                    onClick={() => deleteItem(item._id)}
-                  >
-                    Delete
-                  </button>
+                  {isUpdating === item._id ? (
+                    renderUpdateForm()
+                  ) : (
+                    <>
+                      <p className="item-content">{item.item}</p>
+                      <button
+                        className="update-item"
+                        onClick={() => {
+                          SetIsUpdating(item._id);
+                        }}
+                      >
+                        Update
+                      </button>
+                      <button
+                        className="delete-item"
+                        onClick={() => deleteItem(item._id)}
+                      >
+                        {isDeleting ? (
+                          <Preloader className="loader" />
+                        ) : (
+                          "Delete"
+                        )}
+                      </button>
+                    </>
+                  )}
                 </div>
               );
             })}
